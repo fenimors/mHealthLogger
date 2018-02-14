@@ -69,7 +69,7 @@ public class DisplayNote extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.Delete:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
                 builder.setMessage(R.string.DeleteNote)
                         .setPositiveButton("YES",
                                 new DialogInterface.OnClickListener() {
