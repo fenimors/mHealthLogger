@@ -5,12 +5,17 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import database__OLD.entity.Product;
+import learn_db.Person;
 
 /**
  * Created by fenim on 3/28/2018.
  */
 
+@Database(entities = {Person.class /*, AnotherEntityType.class, AThirdEntityType.class */}, version = 1)
+public abstract class AppDatabase extends RoomDatabase {
+    public abstract PersonDao getPersonDao();
+}
+/*
 @Database(entities = {User.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -34,3 +39,4 @@ public abstract class AppDatabase extends RoomDatabase {
         INSTANCE = null;
     }
 }
+*/

@@ -1,5 +1,6 @@
 package com.example.fenim.uilearn2;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,13 +9,20 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toolbar;
 
+import java.util.List;
+
 import learn_db.AppDatabase;
+import learn_db.Person;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
+    AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+            AppDatabase.class, "populus-database").build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+
+        Button butt = (Button) findViewById(R.id.click_here_btn);
+
+        butt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Person> everyone = db.getPersonDao().getAllPeople();
+            }
+        });
 
     }
 
