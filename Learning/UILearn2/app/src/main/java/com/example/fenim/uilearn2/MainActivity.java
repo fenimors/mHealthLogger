@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
+import learn_db.AppDatabase;
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+
     }
 
     @Override

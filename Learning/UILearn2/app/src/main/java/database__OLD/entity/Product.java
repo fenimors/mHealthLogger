@@ -1,4 +1,4 @@
-package database.entity;
+package database__OLD.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

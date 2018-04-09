@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\fenim\Documents\mHealthLogger\Learning\RoomDemo-master\RoomDemo.iml" filepath="C:\Users\fenim\Documents\mHealthLogger\Learning\RoomDemo-master\RoomDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RoomDemo.iml" filepath="$PROJECT_DIR$/RoomDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/RoomDemo-master.iml" filepath="$PROJECT_DIR$/RoomDemo-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\fenim\Documents\mHealthLogger\Learning\RoomDemo-master\app\app.iml" filepath="C:\Users\fenim\Documents\mHealthLogger\Learning\RoomDemo-master\app\app.iml" />
     </modules>
   </component>
 </project>

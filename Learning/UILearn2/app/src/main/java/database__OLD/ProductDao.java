@@ -1,4 +1,4 @@
-package database;
+package database__OLD;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -8,7 +8,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import database.entity.Product;
+import database__OLD.entity.Product;
 
 /**
  * Created by fenim on 3/28/2018.
