@@ -5,11 +5,11 @@
         <item
             android:id="@+id/nav_first_fragment"
             android:icon="@drawable/ic_adjust_black_24dp"
-            android:title="First" />
+            android:title="Timeline" />
         <item
             android:id="@+id/nav_second_fragment"
             android:icon="@drawable/ic_android_black_24dp"
-            android:title="Second" />
+            android:title="Log" />
         <item
             android:id="@+id/nav_third_fragment"
             android:icon="@drawable/ic_attach_money_black_24dp"
