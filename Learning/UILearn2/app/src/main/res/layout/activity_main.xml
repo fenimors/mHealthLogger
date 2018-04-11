@@ -26,29 +26,22 @@ android:fitsSystemWindows="true">
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="56dp"
-            android:text="Hello Wor222ld!"
-            app:layout_constraintBottom_toTopOf="@+id/click_here_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/click_here_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="156dp"
+            android:layout_marginTop="592dp"
             android:text="main_activity_btn_click_here"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/toolbar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="395dp"
+            android:layout_height="520dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="64dp" />
 
     </android.support.constraint.ConstraintLayout>
 <!-- Container for contents of drawer - use NavigationView to make configuration easier -->

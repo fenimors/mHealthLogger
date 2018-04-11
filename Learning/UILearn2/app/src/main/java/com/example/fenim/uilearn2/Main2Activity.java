@@ -1,5 +1,6 @@
 package com.example.fenim.uilearn2;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -7,10 +8,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toolbar;
 
 public class Main2Activity extends AppCompatActivity {
+
+    private static final String TAG = "CreateUser";
+
+    EditText firstname;
+    EditText lastname;
+    EditText note;
+    Button button;
 
     private DrawerLayout mDrawerLayout;
 
@@ -19,6 +31,24 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        //database stuff
+        firstname = findViewById(R.id.first_name);
+        lastname = findViewById(R.id.last_name);
+        note = findViewById(R.id.note);
+        button = findViewById(R.id.save);
+
+        // TODO: 4/11/2018 thread this stuff
+        final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production").allowMainThreadQueries().build();
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.logDao().insertAll(new com.example.fenim.uilearn2.Log(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString()));
+                startActivity(new Intent(Main2Activity.this, MainActivity.class));
+            }
+        });
+
+        //action panel stuff
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();

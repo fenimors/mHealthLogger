@@ -36,7 +36,6 @@ public class CreateUser extends AppCompatActivity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Save to database
                 Log.d(TAG, "onClick: firstName: " + firstname.getText().toString());
                 db.userDao().insertAll(new User(firstname.getText().toString(), lastname.getText().toString(), email.getText().toString()));
                 startActivity(new Intent(CreateUser.this, MainActivity.class));
