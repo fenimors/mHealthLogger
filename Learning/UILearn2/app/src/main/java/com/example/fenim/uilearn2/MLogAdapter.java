@@ -8,30 +8,30 @@ import android.widget.TextView;
 
 import java.util.List;
 
-class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
+class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.ViewHolder> {
 
-    List<Log> logs;
+    List<MLog> mlogs;
 
-    public LogAdapter(List<Log> logs) {
-        this.logs = logs;
+    public MLogAdapter(List<MLog> mlogs) {
+        this.mlogs = mlogs;
     }
 
     @Override
-    public LogAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.log_row, parent, false);
+    public MLogAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mlog_row, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(LogAdapter.ViewHolder holder, int position) {
-        holder.firstName.setText(logs.get(position).getFirstName());
-        holder.lastName.setText(logs.get(position).getLastName());
-        holder.note.setText(logs.get(position).getNote());
+    public void onBindViewHolder(MLogAdapter.ViewHolder holder, int position) {
+        holder.firstName.setText(mlogs.get(position).getFirstName());
+        holder.lastName.setText(mlogs.get(position).getLastName());
+        holder.note.setText(mlogs.get(position).getNote());
     }
 
     @Override
     public int getItemCount() {
-        return logs.size();
+        return mlogs.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

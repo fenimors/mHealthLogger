@@ -11,9 +11,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toolbar;
 
 import java.util.List;
 
@@ -37,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
         // TODO: 4/11/2018 threading
         AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production").allowMainThreadQueries().build();
 
-        List<Log> logs = db.logDao().getAllLogs();
+        List<MLog> mlogs = db.mlogDao().getAllLogs();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new LogAdapter(logs);
+        adapter = new MLogAdapter(mlogs);
         recyclerView.setAdapter(adapter);
 
 

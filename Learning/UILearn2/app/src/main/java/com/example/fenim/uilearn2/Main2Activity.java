@@ -8,12 +8,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toolbar;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -43,7 +41,7 @@ public class Main2Activity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.logDao().insertAll(new com.example.fenim.uilearn2.Log(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString()));
+                db.mlogDao().insertAll(new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString()));
                 startActivity(new Intent(Main2Activity.this, MainActivity.class));
             }
         });

@@ -3,7 +3,7 @@ package com.example.fenim.uilearn2;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-@Database(entities = {Log.class}, version = 1)
+@Database(entities = {MLog.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
-    public abstract LogDao logDao();
+    public abstract MLogDao mlogDao();
 }
