@@ -33,7 +33,7 @@ class MLogAdapter extends RecyclerView.Adapter<ViewHolder> {
         String formattedDate = df.format(mlogs.get(position).getDate());
         holder.date.setText(formattedDate);
 
-        holder.sliders.setText(mlogs.get(position).getSliders().getName() + Integer.toString(mlogs.get(position).getSliders().getVal()));
+        holder.sliders.setText(Integer.toString(mlogs.get(position).getSliders()));
     }
 
     @Override

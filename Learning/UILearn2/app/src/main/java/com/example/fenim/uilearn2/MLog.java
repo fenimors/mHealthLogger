@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 public class MLog {
 
-    public MLog(String firstName, String lastName, String note, long date, Slider sliders) {
+    public MLog(String firstName, String lastName, String note, long date, int sliders) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.note = note;
@@ -36,13 +36,13 @@ public class MLog {
     private long date;
 
     @ColumnInfo(name = "sliders")
-    private Slider sliders;
+    private int sliders;
 
-    public Slider getSliders() {
+    public int getSliders() {
         return sliders;
     }
 
-    public void setSliders(Slider sliders) {
+    public void setSliders(int sliders) {
         this.sliders = sliders;
     }
 

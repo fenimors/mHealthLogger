@@ -71,9 +71,8 @@ public class Main2Activity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.w(TAG, Integer.toString(seekbar.getProgress()));
                 Log.w(TAG, Integer.toString(seekbar3.getProgress()));
-                db.mlogDao().insertAll(new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis(), (new Slider("TEST",seekbar3.getProgress()))));
+                db.mlogDao().insertAll(new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis(), seekbar3.getProgress()));
                 startActivity(new Intent(Main2Activity.this, MainActivity.class));
             }
         });
