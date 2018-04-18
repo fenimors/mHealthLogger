@@ -9,6 +9,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public TextView lastName;
     public TextView note;
     public TextView date;
+    public TextView sliders;
 
     public ViewHolder(View itemView) {
         super(itemView);
@@ -16,5 +17,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         lastName = itemView.findViewById(R.id.last_name);
         note = itemView.findViewById(R.id.note);
         date = itemView.findViewById(R.id.date);
+        sliders = itemView.findViewById(R.id.sliders);
     }
 }

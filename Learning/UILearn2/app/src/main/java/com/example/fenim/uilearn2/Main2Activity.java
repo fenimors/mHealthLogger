@@ -11,13 +11,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.warkiz.widget.IndicatorSeekBar;
+
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,6 +35,8 @@ public class Main2Activity extends AppCompatActivity {
     TextInputEditText firstname;
     TextInputEditText lastname;
     TextInputEditText note;
+    DiscreteSeekBar seekbar;
+    IndicatorSeekBar seekbar3;
     Button button;
 
     private DrawerLayout mDrawerLayout;
@@ -45,15 +53,16 @@ public class Main2Activity extends AppCompatActivity {
         Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
 
         TextView txtView = (TextView) findViewById(R.id.textView2);
-        txtView.setText("Current Date and Time : "+formattedDate);
+        txtView.setText("Current Date and Time : " + formattedDate);
         txtView.setTextSize(20);
 
-
+        //seekbarStuff
+        seekbar = findViewById(R.id.seekBar2);
+        seekbar3 = findViewById(R.id.seekBar3);
         //database stuff
         firstname = findViewById(R.id.first_name);
         lastname = findViewById(R.id.last_name);
         note = findViewById(R.id.note);
-
 
         button = findViewById(R.id.save);
         // TODO: 4/11/2018 thread this stuff
@@ -62,7 +71,9 @@ public class Main2Activity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.mlogDao().insertAll(new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis()));
+                Log.w(TAG, Integer.toString(seekbar.getProgress()));
+                Log.w(TAG, Integer.toString(seekbar3.getProgress()));
+                db.mlogDao().insertAll(new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis(), (new Slider("TEST",seekbar3.getProgress()))));
                 startActivity(new Intent(Main2Activity.this, MainActivity.class));
             }
         });
