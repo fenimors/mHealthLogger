@@ -4,14 +4,17 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.util.Calendar;
+
 
 @Entity
 public class MLog {
 
-    public MLog(String firstName, String lastName, String note) {
+    public MLog(String firstName, String lastName, String note, long date) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.note = note;
+        this.date = date;
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -25,6 +28,17 @@ public class MLog {
 
     @ColumnInfo(name = "note")
     private String note;
+
+    @ColumnInfo(name = "date")
+    private long date;
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
 
     public int getId() {
         return id;

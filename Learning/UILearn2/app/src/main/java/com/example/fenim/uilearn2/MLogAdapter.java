@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.ViewHolder> {
+class MLogAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     List<MLog> mlogs;
 
@@ -17,16 +18,20 @@ class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.ViewHolder> {
     }
 
     @Override
-    public MLogAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mlog_row, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MLogAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         holder.firstName.setText(mlogs.get(position).getFirstName());
         holder.lastName.setText(mlogs.get(position).getLastName());
         holder.note.setText(mlogs.get(position).getNote());
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(mlogs.get(position).getDate());
+        holder.date.setText(formattedDate);
     }
 
     @Override
@@ -34,16 +39,5 @@ class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.ViewHolder> {
         return mlogs.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView firstName;
-        public TextView lastName;
-        public TextView note;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            firstName = itemView.findViewById(R.id.first_name);
-            lastName = itemView.findViewById(R.id.last_name);
-            note = itemView.findViewById(R.id.note);
-        }
-    }
 }
 
