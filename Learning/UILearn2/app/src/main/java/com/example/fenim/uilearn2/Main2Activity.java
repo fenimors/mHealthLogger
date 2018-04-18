@@ -35,7 +35,6 @@ public class Main2Activity extends AppCompatActivity {
     TextInputEditText firstname;
     TextInputEditText lastname;
     TextInputEditText note;
-    DiscreteSeekBar seekbar;
     IndicatorSeekBar seekbar3;
     Button button;
 
@@ -57,8 +56,8 @@ public class Main2Activity extends AppCompatActivity {
         txtView.setTextSize(20);
 
         //seekbarStuff
-        seekbar = findViewById(R.id.seekBar2);
         seekbar3 = findViewById(R.id.seekBar3);
+
         //database stuff
         firstname = findViewById(R.id.first_name);
         lastname = findViewById(R.id.last_name);
@@ -67,12 +66,20 @@ public class Main2Activity extends AppCompatActivity {
         button = findViewById(R.id.save);
         // TODO: 4/11/2018 thread this stuff
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production").allowMainThreadQueries().build();
+        final MLog tm = new MLog("Sam","Fenimore","testyay",123456789);
+        db.mlogDao().insertAll();
+        db.slidersDao().insertAll(new Sliders("test1", 2, tm.getId()));
+        db.slidersDao().insertAll(new Sliders("test2", 3, tm.getId()));
+
+
+        Sliders temp1 = db.slidersDao().findSlidersForMLog(tm.getId()).get(0);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Log.w(TAG, );
                 Log.w(TAG, Integer.toString(seekbar3.getProgress()));
-                db.mlogDao().insertAll(new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis(), seekbar3.getProgress()));
+                db.mlogDao().insertAll(new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis()));
                 startActivity(new Intent(Main2Activity.this, MainActivity.class));
             }
         });

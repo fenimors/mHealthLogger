@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<MLog> mlogs = db.mlogDao().getAllLogs();
 
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MLogAdapter(mlogs);
         recyclerView.setAdapter(adapter);

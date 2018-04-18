@@ -2,6 +2,7 @@ package com.example.fenim.uilearn2;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.util.ArrayList;
@@ -12,12 +13,12 @@ import java.util.List;
 @Entity
 public class MLog {
 
-    public MLog(String firstName, String lastName, String note, long date, int sliders) {
+    public MLog(String firstName, String lastName, String note, long date) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.note = note;
         this.date = date;
-        this.sliders = sliders;
+
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -34,18 +35,6 @@ public class MLog {
 
     @ColumnInfo(name = "date")
     private long date;
-
-    @ColumnInfo(name = "sliders")
-    private int sliders;
-
-    public int getSliders() {
-        return sliders;
-    }
-
-    public void setSliders(int sliders) {
-        this.sliders = sliders;
-    }
-
 
 
     public long getDate() {
@@ -88,3 +77,4 @@ public class MLog {
         this.note = note;
     }
 }
+
