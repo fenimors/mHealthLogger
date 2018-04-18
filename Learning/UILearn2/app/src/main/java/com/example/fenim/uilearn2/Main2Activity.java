@@ -50,6 +50,7 @@ public class Main2Activity extends AppCompatActivity {
 
         //action panel stuff
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Logging");
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
