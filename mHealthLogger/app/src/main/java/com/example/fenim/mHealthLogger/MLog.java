@@ -1,9 +1,12 @@
-package com.example.fenim.mHealthLogger.DB;
+package com.example.fenim.mHealthLogger;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -13,12 +16,23 @@ public class MLog {
     @NonNull
     private int id;
 
-    public MLog(String firstName, String lastName, String note, long date) {
+    public MLog(String firstName, String lastName, String note, long date, String slider) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.note = note;
         this.date = date;
+        this.slider = slider;
 
+    }
+
+    private String slider;
+
+    public String getSlider() {
+        return slider;
+    }
+
+    public void setSlider(String slider) {
+        this.slider = slider;
     }
 
     @ColumnInfo(name = "first_name")
@@ -32,8 +46,6 @@ public class MLog {
 
     @ColumnInfo(name = "date")
     private long date;
-
-
 
     public long getDate() {
         return date;

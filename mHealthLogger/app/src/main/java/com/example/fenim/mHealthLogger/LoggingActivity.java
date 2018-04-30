@@ -1,7 +1,8 @@
 package com.example.fenim.mHealthLogger;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.view.GravityCompat;
@@ -9,76 +10,123 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fenim.mHealthLogger.DB.AppDatabase;
-import com.example.fenim.mHealthLogger.DB.MLog;
-import com.example.fenim.mHealthLogger.DB.Sliders;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class LoggingActivity extends AppCompatActivity {
 
+    public static final String EXTRA_REPLY = "com.example.android.wordlistsql.REPLY";
+
     private static final String TAG = "LoggingActivity";
 
-    TextInputEditText firstname;
-    TextInputEditText lastname;
-    TextInputEditText note;
-    IndicatorSeekBar seekbar3;
-    Button button;
+    private  TextInputEditText firstname;
+    private  TextInputEditText lastname;
+    private  TextInputEditText note;
+    private  IndicatorSeekBar tSlider;
+    //Button button;
 
     private DrawerLayout mDrawerLayout;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);
-
+        findViewById(R.id.seekBar1).setVisibility(View.GONE);
+        //Getting the timestamp
         final Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = df.format(c.getTime());
-        // formattedDate have current date/time
-        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
 
+
+
+
+        // formattedDate have current date/time SHOWN
+        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
         TextView txtView = (TextView) findViewById(R.id.textView2);
         txtView.setText("Current Date and Time : " + formattedDate);
         txtView.setTextSize(20);
 
-        //seekbarStuff
-        seekbar3 = findViewById(R.id.seekBar3);
+        //Handles sliders puts it into a string file to be passed back to the viewer
+        //if( findViewById(R.id.seekBar1).getVisibility() != View.GONE)
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         //database stuff
+
         firstname = findViewById(R.id.first_name);
         lastname = findViewById(R.id.last_name);
         note = findViewById(R.id.note);
 
-        button = findViewById(R.id.save);
-        // TODO: 4/11/2018 thread this stuff
-        final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production").allowMainThreadQueries().build();
-       // final MLog tm = new MLog("Sam","Fenimore","testyay",123456789);
-        //db.mlogDao().insertAll(tm);
-        //db.slidersDao().insertAll(new Sliders("test1", 2, tm.getId()));
- //       db.slidersDao().insertAll(new Sliders("test2", 3, tm.getId()));
+        //Add the button
+        final Button button = findViewById(R.id.save);
 
 
-       // Sliders temp1 = db.slidersDao().findSlidersForMLog(tm.getId()).get(0);
+       /* final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production").allowMainThreadQueries().build();
+        final MLog tm = new MLog("Sam","Fenimore","testyay",123456789);
+        db.mlogDao().insertAll(tm);
+        db.slidersDao().insertAll(new Sliders("test1", 2, tm.getId()));
+        db.slidersDao().insertAll(new Sliders("test2", 3, tm.getId()));
+
+
+        Sliders temp1 = db.slidersDao().findSlidersForMLog(tm.getId()).get(0);*/
 
         button.setOnClickListener(new View.OnClickListener() {
-            @Override
+            //@Override
             public void onClick(View v) {
-                //Log.w(TAG, );
-             //   Log.w(TAG, Integer.toString(seekbar3.getProgress()));
+                Intent replyIntent = new Intent();
+                if (TextUtils.isEmpty(firstname.getText())) {
+                    setResult(RESULT_CANCELED, replyIntent);
+                }
+                else {
+
+                    String slider ="";
+
+                    if( findViewById(R.id.seekBar1).getVisibility() != View.GONE)
+                        slider = Integer.toString(((IndicatorSeekBar) findViewById(R.id.seekBar1)).getProgress());
+                    else { slider += 'E';}
+                    tSlider = findViewById(R.id.seekBar2);
+                    slider += Integer.toString(tSlider.getProgress());
+                    tSlider = findViewById(R.id.seekBar3);
+                    slider += Integer.toString(tSlider.getProgress());
+                    tSlider = findViewById(R.id.seekBar4);
+                    slider += Integer.toString(tSlider.getProgress());
+
+                    String fName = firstname.getText().toString();
+                    String lName = lastname.getText().toString();
+                    String mnote = note.getText().toString();
+                    Long time_data = c.getTimeInMillis();
+
+                    //String test = Boolean.toString(sharedPref.getBoolean("key_slider1", true)); //this was for testing purposes
+                    replyIntent.putExtra("fName", fName);
+                    replyIntent.putExtra("lName", lName);
+                    replyIntent.putExtra("mnote", mnote);
+                    replyIntent.putExtra("time_data", time_data);
+                    replyIntent.putExtra("mseekbar", slider);
+                    setResult(RESULT_OK, replyIntent);
+                }
+                finish();
+
+               /* Log.w(TAG, );
+                Log.w(TAG, Integer.toString(seekbar3.getProgress()));
                 MLog tem = new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis());
                 db.mlogDao().insertAll(tem);
-              // Log.i(TAG, Integer.toString(tem.getId()));
+               Log.i(TAG, Integer.toString(tem.getId()));
                 db.slidersDao().insertAll(new Sliders("Test1", seekbar3.getProgress(), tem.getId()));
-                startActivity(new Intent(LoggingActivity.this, TimelineActivity.class));
+                startActivity(new Intent(LoggingActivity.this, TimelineActivity.class));*/
             }
         });
 
