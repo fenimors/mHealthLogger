@@ -3,6 +3,8 @@ package com.example.fenim.mHealthLogger;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -48,44 +50,8 @@ public class TimelineActivity extends AppCompatActivity {
                 adapter.setMlogs(mLogs);
             }
         });
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-
-
-
-
-
-        /*
-        //listing stuff using recycler view
-        RecyclerView recyclerView;
-        RecyclerView.Adapter adapter;
-        recyclerView = findViewById(R.id.recycler_view);
-
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production").allowMainThreadQueries().fallbackToDestructiveMigration().build();
-*/
-        /*List<MLog> mlogs = db.mlogDao().getAllLogs();
-
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //adapter = new MLogAdapter(mlogs);
-
-        ArrayList<Object> items = new ArrayList<>();
-        List<Sliders> slid = db.slidersDao().findSlidersForMLog(0);
-        if (mlogs.size() > 0) {
-            for (MLog i : mlogs)
-            {
-                items.add(i);
-                slid = db.slidersDao().findSlidersForMLog(i.getId());
-                for (Sliders j : slid)
-                {
-                    items.add(j);
-                }
-            }
-
-            items.add(mlogs);
-
-            adapter = new ComplexRecyclerViewAdapter(items);
-            recyclerView.setAdapter(adapter);*/
-       // }
 
 
 

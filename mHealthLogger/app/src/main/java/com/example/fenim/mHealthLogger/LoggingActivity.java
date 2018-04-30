@@ -45,7 +45,16 @@ public class LoggingActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);
-        findViewById(R.id.seekBar1).setVisibility(View.GONE);
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        for (int i = 0; i < Constant.SLIDER_COUNT; i++)
+        {
+            if( !sharedPref.getBoolean("key_slider" + (i+1), true))
+                findViewById(getResources().getIdentifier(
+                        "seekBar"+(i+1), "id", getPackageName())).setVisibility(View.GONE);
+        }
+
         //Getting the timestamp
         final Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -62,7 +71,6 @@ public class LoggingActivity extends AppCompatActivity {
 
         //Handles sliders puts it into a string file to be passed back to the viewer
         //if( findViewById(R.id.seekBar1).getVisibility() != View.GONE)
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
 
         //database stuff
@@ -71,18 +79,10 @@ public class LoggingActivity extends AppCompatActivity {
         lastname = findViewById(R.id.last_name);
         note = findViewById(R.id.note);
 
+
         //Add the button
         final Button button = findViewById(R.id.save);
 
-
-       /* final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production").allowMainThreadQueries().build();
-        final MLog tm = new MLog("Sam","Fenimore","testyay",123456789);
-        db.mlogDao().insertAll(tm);
-        db.slidersDao().insertAll(new Sliders("test1", 2, tm.getId()));
-        db.slidersDao().insertAll(new Sliders("test2", 3, tm.getId()));
-
-
-        Sliders temp1 = db.slidersDao().findSlidersForMLog(tm.getId()).get(0);*/
 
         button.setOnClickListener(new View.OnClickListener() {
             //@Override
@@ -95,15 +95,15 @@ public class LoggingActivity extends AppCompatActivity {
 
                     String slider ="";
 
-                    if( findViewById(R.id.seekBar1).getVisibility() != View.GONE)
-                        slider = Integer.toString(((IndicatorSeekBar) findViewById(R.id.seekBar1)).getProgress());
-                    else { slider += 'E';}
-                    tSlider = findViewById(R.id.seekBar2);
-                    slider += Integer.toString(tSlider.getProgress());
-                    tSlider = findViewById(R.id.seekBar3);
-                    slider += Integer.toString(tSlider.getProgress());
-                    tSlider = findViewById(R.id.seekBar4);
-                    slider += Integer.toString(tSlider.getProgress());
+                    for (int i = 0; i < Constant.SLIDER_COUNT; i++)
+                    {
+                        if( sharedPref.getBoolean("key_slider" + (i+1), true)) {
+                            slider += Integer.toString(((IndicatorSeekBar) findViewById(getResources().getIdentifier("seekBar" +(i+1), "id", getPackageName())))
+                                    .getProgress());
+                        }
+                        else { slider += 'E';}
+                    }
+
 
                     String fName = firstname.getText().toString();
                     String lName = lastname.getText().toString();
@@ -120,13 +120,6 @@ public class LoggingActivity extends AppCompatActivity {
                 }
                 finish();
 
-               /* Log.w(TAG, );
-                Log.w(TAG, Integer.toString(seekbar3.getProgress()));
-                MLog tem = new MLog(firstname.getText().toString(), lastname.getText().toString(), note.getText().toString(), c.getTimeInMillis());
-                db.mlogDao().insertAll(tem);
-               Log.i(TAG, Integer.toString(tem.getId()));
-                db.slidersDao().insertAll(new Sliders("Test1", seekbar3.getProgress(), tem.getId()));
-                startActivity(new Intent(LoggingActivity.this, TimelineActivity.class));*/
             }
         });
 

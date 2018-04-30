@@ -1,6 +1,8 @@
 package com.example.fenim.mHealthLogger;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,31 +14,41 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.MLogViewHolder> {
-
+    Context mContext;
     class MLogViewHolder extends RecyclerView.ViewHolder {
         //private final TextView MLogItemView;
         private final TextView firstName;
         private final TextView lastName;
         private final TextView note;
         private final TextView date;
-        private final TextView seekBar1;
-        private final TextView seekBar2;
-        private final TextView seekBar3;
-        private final TextView seekBar4;
-       // private final TextView sliderArray;
+        private final TextView[] seekBar;
+     //  private final TextView seekBar2;
+      //  private final TextView seekBar3;
+      //  private final TextView seekBar4;
 
 
         private MLogViewHolder(View itemView) {
             super(itemView);
-//            MLogItemView = itemView.findViewById(R.id.textView);
+
+
+
             firstName = itemView.findViewById(R.id.first_name);
             lastName = itemView.findViewById(R.id.last_name);
             note = itemView.findViewById(R.id.note);
             date = itemView.findViewById(R.id.date);
-            seekBar1 = itemView.findViewById(R.id.seekBar1);
-            seekBar2 = itemView.findViewById(R.id.seekBar2);
-            seekBar3 = itemView.findViewById(R.id.seekBar3);
-            seekBar4 = itemView.findViewById(R.id.seekBar4);
+
+            seekBar = new TextView[5];
+            String BId = "seekBar";
+            for (int i = 0; i < Constant.SLIDER_COUNT; i++)
+            {
+                seekBar[i] = itemView.findViewById(
+                        itemView.getResources().getIdentifier(BId+(i+1),
+                                "id", mContext.getPackageName()));
+            }
+            //seekBar[0] = itemView.findViewById(R.id.seekBar1);
+           // seekBar2 = itemView.findViewById(R.id.seekBar2);
+           // seekBar3 = itemView.findViewById(R.id.seekBar3);
+          //  seekBar4 = itemView.findViewById(R.id.seekBar4);
             //sliderArray = itemView.findViewById(R.id.sliderArray);
         }
     }
@@ -46,6 +58,7 @@ public class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.MLogViewHolder
 
     MLogAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     @Override
@@ -56,9 +69,20 @@ public class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.MLogViewHolder
 
     @Override
     public void onBindViewHolder(MLogViewHolder holder, int position) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (mlogs != null) {
+
+        /*    if( !sharedPref.getBoolean("key_slider1", true))
+                holder.seekBar[0].setVisibility(View.GONE);
+            if( !sharedPref.getBoolean("key_slider2", true))
+                holder.seekBar2.setVisibility(View.GONE);
+            if( !sharedPref.getBoolean("key_slider3", true))
+                holder.seekBar3.setVisibility(View.GONE);
+            if( !sharedPref.getBoolean("key_slider4", true))
+                holder.seekBar4.setVisibility(View.GONE);*/
+
+
             MLog current = mlogs.get(position);
-           // holder.MLogItemView.setText(current.getFirstName());    //probably will have to expand
 
             holder.firstName.setText(current.getFirstName());
             holder.lastName.setText(current.getLastName());
@@ -67,21 +91,26 @@ public class MLogAdapter extends RecyclerView.Adapter<MLogAdapter.MLogViewHolder
             String formattedDate = df.format(current.getDate());
             holder.date.setText(formattedDate);
 
-            holder.seekBar1.setVisibility(View.GONE); //TODO: Basically have a global constant for each of theese then it can all be set in settings
-            holder.seekBar1.setText("Thing1: " + current.getSlider().charAt(0));
-            holder.seekBar2.setText("Thing2: " + current.getSlider().charAt(1));
-            holder.seekBar3.setText("Thing3: " + current.getSlider().charAt(2));
-            holder.seekBar4.setText("Thing4: " + current.getSlider().charAt(3));
+
+          //  holder.seekBar1.setVisibility(View.GONE); //TODO: Basically have a global constant for each of theese then it can all be set in settings
+
+            for (int i = 0; i < Constant.SLIDER_COUNT; i++)
+            {
+                if( !sharedPref.getBoolean("key_slider" + (i+1), true))
+                    holder.seekBar[i].setVisibility(View.GONE);
+
+                holder.seekBar[i].setText(Constant.SLIDER_NAMES[i] + current.getSlider().charAt(i));
+            }
+
         }
         else {
             holder.firstName.setText("NothingF");
             holder.lastName.setText("NothingL");
             holder.note.setText("NothingN");
             holder.date.setText("NothingD");
-            holder.seekBar1.setText("NothingD");
-            holder.seekBar2.setText("NothingD");
-            holder.seekBar3.setText("NothingD");
-            holder.seekBar4.setText("NothingD");
+            for (int i = 0; i < Constant.SLIDER_COUNT; i++) {
+                holder.seekBar[i].setText("NothingD");
+            }
         }
     }
 

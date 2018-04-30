@@ -50,10 +50,10 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             mDao.deleteAll();
-            MLog mlog = new MLog("Hello", "World", "Cool note bro", 99999999, "1234");
+            MLog mlog = new MLog("Hello", "World", "Cool note bro", 99999999, "123456");
             mDao.insert(mlog);
            // mlog = new MLog("Hello2", "World2", "Cool note bro2", 999999992);
-            mDao.insert(mlog);
+           // mDao.insert(mlog);
             return null;
         }
     }
