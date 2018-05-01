@@ -110,7 +110,6 @@ public class LoggingActivity extends AppCompatActivity {
                     String mnote = note.getText().toString();
                     Long time_data = c.getTimeInMillis();
 
-                    //String test = Boolean.toString(sharedPref.getBoolean("key_slider1", true)); //this was for testing purposes
                     replyIntent.putExtra("fName", fName);
                     replyIntent.putExtra("lName", lName);
                     replyIntent.putExtra("mnote", mnote);
