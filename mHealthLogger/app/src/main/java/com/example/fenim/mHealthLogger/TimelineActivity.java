@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -29,11 +30,14 @@ public class TimelineActivity extends AppCompatActivity {
 
     private MLogViewModel mLogViewModel;
 
+    private static final String FRAGMENT_TAG_DATA_PROVIDER = "data provider";
+    private static final String FRAGMENT_LIST_VIEW = "list view";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+
+       /* setContentView(R.layout.activity_timeline);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         final MLogAdapter adapter = new MLogAdapter(this);
@@ -49,7 +53,17 @@ public class TimelineActivity extends AppCompatActivity {
                 // Update the cached copy of the words in the adapter.
                 adapter.setMlogs(mLogs);
             }
-        });
+        });*/
+        setContentView(R.layout.activity_demo);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(new ExampleExpandableDataProviderFragment(), FRAGMENT_TAG_DATA_PROVIDER)
+                    .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new ExpandableExampleFragment(), FRAGMENT_LIST_VIEW)
+                    .commit();
+        }
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
 
@@ -103,6 +117,11 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });*/
 
+    }
+
+    public AbstractExpandableDataProvider getDataProvider() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DATA_PROVIDER);
+        return ((ExampleExpandableDataProviderFragment) fragment).getDataProvider();
     }
 
     @Override
