@@ -10,7 +10,7 @@ public class MLogViewHolder extends RecyclerView.ViewHolder{
     public TextView firstName;
     public TextView lastName;
     public TextView note;
-    public  TextView date;
+    public TextView date;
     public TextView[] seekBar;
 
 
