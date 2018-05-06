@@ -12,7 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -34,24 +36,30 @@ public class LoggingActivity extends AppCompatActivity {
 
     private static final String TAG = "LoggingActivity";
 
-    private  TextInputEditText firstname;
-    private  TextInputEditText lastname;
-    private  TextInputEditText note;
-    private  IndicatorSeekBar tSlider;
+    private TextInputEditText firstname;
+    private TextInputEditText lastname;
+    private TextInputEditText note;
+    private IndicatorSeekBar tSlider;
     //Button button;
 
     private DrawerLayout mDrawerLayout;
 
     private MLogViewModel mLogViewModel;
-
+    private SharedPreferences sharedPref;
     Intent replyIntent;
     Long time_data;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.log_toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.showOverflowMenu();
 
         //nav drawer
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -59,9 +67,8 @@ public class LoggingActivity extends AppCompatActivity {
 
         replyIntent = new Intent();
 
-        for (int i = 0; i < Constant.SLIDER_COUNT; i++)
-        {
-            if( !sharedPref.getBoolean("key_slider" + (i+1), true)) {
+        for (int i = 0; i < Constant.SLIDER_COUNT; i++) {
+            if (!sharedPref.getBoolean("key_slider" + (i + 1), true)) {
                 findViewById(getResources().getIdentifier(
                         "seekBar" + (i + 1), "id", getPackageName())).setVisibility(View.GONE);
                 findViewById(getResources().getIdentifier(
@@ -73,9 +80,6 @@ public class LoggingActivity extends AppCompatActivity {
 
         //Getting the timestamp
         final Calendar c = Calendar.getInstance();
-
-
-
 
 
         //Handles sliders puts it into a string file to be passed back to the viewer
@@ -90,8 +94,7 @@ public class LoggingActivity extends AppCompatActivity {
         int dbID = getIntent().getIntExtra("dbID", -1);
         mLogViewModel = ViewModelProviders.of(this).get(MLogViewModel.class);
 
-        if(dbID != -1)
-        {
+        if (dbID != -1) {
             MLog mmLog = mLogViewModel.getMlogByID(dbID);
             firstname.setText("lol");
             firstname.setText(mmLog.getFirstName());
@@ -100,70 +103,24 @@ public class LoggingActivity extends AppCompatActivity {
             replyIntent.putExtra("mID", mmLog.getId());
             time_data = mmLog.getDate();
             String slider = mmLog.getSlider();
-            for (int i = 0; i < Constant.SLIDER_COUNT; i++)
-            {
+            for (int i = 0; i < Constant.SLIDER_COUNT; i++) {
                 if (slider.charAt(i) != 'E') {
-                    float t =  Character.getNumericValue(slider.charAt(i));
-                    ((IndicatorSeekBar) findViewById(getResources().getIdentifier("seekBar" +(i+1), "id", getPackageName()))).setProgress(t);
+                    float t = Character.getNumericValue(slider.charAt(i));
+                    ((IndicatorSeekBar) findViewById(getResources().getIdentifier("seekBar" + (i + 1), "id", getPackageName()))).setProgress(t);
                 }
             }
-        }
-        else {
+        } else {
             time_data = c.getTimeInMillis();
         }
 
 
         // formattedDate have current date/time SHOWN
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY hh:mm.ss aa");
         String formattedDate = df.format(time_data);
         TextView txtView = (TextView) findViewById(R.id.textView2);
-        txtView.setText("Date and Time : " + formattedDate);
+        txtView.setText("Time: " + formattedDate);
         txtView.setTextSize(20);
-        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
-
-
-
-        //Add the button
-        final Button button = findViewById(R.id.save);
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            //@Override
-            public void onClick(View v) {
-
-                if (TextUtils.isEmpty(firstname.getText())) {
-                    setResult(RESULT_CANCELED, replyIntent);
-                }
-                else {
-
-                    String slider ="";
-
-                    for (int i = 0; i < Constant.SLIDER_COUNT; i++)
-                    {
-                        if( sharedPref.getBoolean("key_slider" + (i+1), true)) {
-                            slider += Integer.toString(((IndicatorSeekBar) findViewById(getResources().getIdentifier("seekBar" +(i+1), "id", getPackageName())))
-                                    .getProgress());
-                        }
-                        else { slider += 'E';}
-                    }
-
-
-                    String fName = firstname.getText().toString();
-                    String lName = lastname.getText().toString();
-                    String mnote = note.getText().toString();
-
-
-                    replyIntent.putExtra("fName", fName);
-                    replyIntent.putExtra("lName", lName);
-                    replyIntent.putExtra("mnote", mnote);
-                    replyIntent.putExtra("time_data", time_data);
-                    replyIntent.putExtra("mseekbar", slider);
-                    setResult(RESULT_OK, replyIntent);
-                }
-                finish();
-
-            }
-        });
+        //Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
 
         //action panel stuff
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
@@ -190,7 +147,8 @@ public class LoggingActivity extends AppCompatActivity {
                             Intent myIntent = new Intent(LoggingActivity.this, TimelineActivity.class);
                             startActivity(myIntent);
                         } else if (id == R.id.nav_second_fragment) {
-                           // Intent myIntent = new Intent(TimelineActivity.this, LoggingActivity.class);
+                            Intent myIntent = new Intent(LoggingActivity.this, StatisticsActivity.class);
+                            startActivity(myIntent);
 
                         } else if (id == R.id.nav_third_fragment) {
                             Intent myIntent = new Intent(LoggingActivity.this, SettingsActivity.class);
@@ -206,12 +164,70 @@ public class LoggingActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.logging_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case R.id.menu_save: {
+                // do your sign-out stuff
+                if (TextUtils.isEmpty(firstname.getText())) {
+                    setResult(RESULT_CANCELED, replyIntent);
+                } else {
+
+                    String slider = "";
+
+                    for (int i = 0; i < Constant.SLIDER_COUNT; i++) {
+                        if (sharedPref.getBoolean("key_slider" + (i + 1), true)) {
+                            slider += Integer.toString(((IndicatorSeekBar) findViewById(getResources().getIdentifier("seekBar" + (i + 1), "id", getPackageName())))
+                                    .getProgress());
+                        } else {
+                            slider += 'E';
+                        }
+                    }
+
+
+                    String fName = firstname.getText().toString();
+                    String lName = lastname.getText().toString();
+                    String mnote = note.getText().toString();
+
+
+                    replyIntent.putExtra("fName", fName);
+                    replyIntent.putExtra("lName", lName);
+                    replyIntent.putExtra("mnote", mnote);
+                    replyIntent.putExtra("time_data", time_data);
+                    replyIntent.putExtra("mseekbar", slider);
+                    setResult(RESULT_OK, replyIntent);
+                }
+                finish();
+                break;
+            }
+            case R.id.menu_delete: {
+                int dbID = getIntent().getIntExtra("dbID", -1);
+
+                if (dbID != -1) {
+                    MLog mmLog = mLogViewModel.getMlogByID(dbID);
+                    mLogViewModel.deleteMlogByID(mmLog.getId());
+                } else {
+                    Toast.makeText(this, "Entry hasn't been saved yet or doesn't exist", Toast.LENGTH_SHORT).show();
+                }
+
+                finish();
+                break;
+            }
+            case R.id.menu_quit: {
+                finish();
+                break;
+            }
+            case android.R.id.home: {
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+                break;
+            }
+            // case blocks for other MenuItems (if any)
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 }

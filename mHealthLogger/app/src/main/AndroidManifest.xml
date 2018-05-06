@@ -22,11 +22,16 @@
         </activity>
         <activity android:name=".LoggingActivity">
             android:label="Logging Page">
-        </activity>+
+        </activity>
+        +
         <activity android:name=".MinimalExpandableActivity">
             android:label="MinimalExpandableActivity">
         </activity>
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".StatisticsActivity"
+            android:label="@string/title_activity_statistics"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent myIntent = new Intent(MainActivity.this, TimelineActivity.class);
                             startActivity(myIntent);
                         } else if (id == R.id.nav_second_fragment) {
-                            Intent myIntent = new Intent(MainActivity.this, LoggingActivity.class);
+                            Intent myIntent = new Intent(MainActivity.this, StatisticsActivity.class);
                             startActivity(myIntent);
                         } else if (id == R.id.nav_third_fragment) {
                             Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);

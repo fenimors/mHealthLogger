@@ -15,7 +15,6 @@ public class MLogViewModel extends AndroidViewModel {
 
     private LiveData<List<MLog>> rmAllLogs;
 
-    private LiveData<List<MLog>> rmDateLogs;
 
     public MLogViewModel(Application application) {
         super(application);
@@ -29,7 +28,11 @@ public class MLogViewModel extends AndroidViewModel {
 
     public MLog getMlogByID(int id) {return mRepository.getMlogByID(id);}
 
-    public List<MLog> getFromTable(String year) {return mRepository.getFromTable(year);}
+    public int deleteMlogByID(int id) {return mRepository.deleteMlogByID(id);}
+
+    public List<MLog> getFromTable(Long i, Long j) {return mRepository.getFromTable(i,j);}
+
+    public List<MLog> getrmDateLogs() {return mRepository.getrmDateLogs();}
 
     public void insert(MLog mlog) { mRepository.insert(mlog); }
 

@@ -21,14 +21,26 @@
         android:layout_height="wrap_content">
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/log_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
         <com.warkiz.widget.IndicatorSeekBar
             android:id="@+id/seekBar1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:isb_indicator_type="circular_bubble"
-            app:isb_max="10"
-            app:isb_min="1"
+            app:isb_max="9"
+            app:isb_min="0"
             app:isb_seek_bar_type="discrete_ticks_texts"
             app:isb_tick_num="10"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,8 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:isb_indicator_type="circular_bubble"
-            app:isb_max="10"
-            app:isb_min="1"
+            app:isb_max="9"
+            app:isb_min="0"
             app:isb_seek_bar_type="discrete_ticks_texts"
             app:isb_tick_num="10"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,8 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:isb_indicator_type="circular_bubble"
-            app:isb_max="10"
-            app:isb_min="1"
+            app:isb_max="9"
+            app:isb_min="0"
             app:isb_seek_bar_type="discrete_ticks_texts"
             app:isb_tick_num="10"
             app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +120,7 @@
                 android:id="@+id/first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                android:hint="Title" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -127,7 +139,7 @@
                 android:id="@+id/last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                android:hint="Quick Note" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -147,7 +159,7 @@
                 android:id="@+id/note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint"
+                android:hint="Detailed Log"
                 app:layout_constraintTop_toBottomOf="@+id/last_name" />
         </android.support.design.widget.TextInputLayout>
 
@@ -156,11 +168,9 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="47dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="DateAndTime"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
@@ -211,18 +221,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seekBar3" />
-
-        <Button
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Save"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seekBar4" />
 
         <TextView
             android:id="@+id/dummy"

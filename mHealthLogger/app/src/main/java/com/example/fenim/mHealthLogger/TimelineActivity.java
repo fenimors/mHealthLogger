@@ -4,16 +4,23 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,32 +28,44 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.akshaykale.swipetimeline.TimelineFragment;
+import com.akshaykale.swipetimeline.TimelineGroupType;
+import com.akshaykale.swipetimeline.TimelineObject;
+import com.akshaykale.swipetimeline.TimelineObjectClickListener;
+
 import org.qap.ctimelineview.TimelineRow;
 import org.qap.ctimelineview.TimelineViewAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements TimelineObjectClickListener {
 
     private static final String TAG = "TimelineActivity";
 
     private DrawerLayout mDrawerLayout;
-    //AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "populus-database").build();
 
 
     private MLogViewModel mLogViewModel;
     final ArrayList<TimelineRow> timelineRowsList = new ArrayList<>();
     ArrayAdapter<TimelineRow> myAdapter;
 
+    private TimelineFragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.showOverflowMenu();
+
+
         //nav drawer
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         MenuItem menuItem;
         menuItem = navigationView.getMenu().findItem(R.id.nav_first_fragment);
         if(!menuItem.isChecked())
@@ -54,77 +73,14 @@ public class TimelineActivity extends AppCompatActivity {
             menuItem.setChecked(true);
         }
 
+        mFragment = new TimelineFragment();
 
-
-
-// Create new timeline row (Row Id)
-        TimelineRow myRow = new TimelineRow(0);
-
-// To set the row Date (optional)
-        myRow.setDate(new Date());
-// To set the row Title (optional)
-        myRow.setTitle("Title");
-// To set the row Description (optional)
-        myRow.setDescription("Description");
-        /*
-// To set the row bitmap image (optional)
-        myRow.setImage(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-// To set row Below Line Color (optional)
-        myRow.setBellowLineColor(Color.argb(255, 0, 0, 0));
-// To set row Below Line Size in dp (optional)
-        myRow.setBellowLineSize(6);
-// To set row Image Size in dp (optional)
-        myRow.setImageSize(40);
-// To set background color of the row image (optional)
-        myRow.setBackgroundColor(Color.argb(255, 0, 0, 0));
-// To set the Background Size of the row image in dp (optional)
-        myRow.setBackgroundSize(60);
-// To set row Date text color (optional)
-        myRow.setDateColor(Color.argb(255, 0, 0, 0));
-// To set row Title text color (optional)
-        myRow.setTitleColor(Color.argb(255, 0, 0, 0));
-// To set row Description text color (optional)
-        myRow.setDescriptionColor(Color.argb(255, 0, 0, 0));*/
-
-// Add the new row to the list
-        timelineRowsList.add(myRow);
-        timelineRowsList.add(myRow);
-
-// Create the Timeline Adapter
-        myAdapter = new TimelineViewAdapter(this, 0, timelineRowsList,
-                //if true, list will be sorted by date
-                true);
-
-// Get the ListView and Bind it with the Timeline Adapter
-        ListView myListView = (ListView) findViewById(R.id.timeline_listView);
-        myListView.setAdapter(myAdapter);
-        //myListView.setLayoutManager(new LinearLayoutManager(this));
-
-
-
-        AdapterView.OnItemClickListener adapterListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TimelineRow row = timelineRowsList.get(position);
-                Toast.makeText(TimelineActivity.this, row.getTitle(), Toast.LENGTH_SHORT).show();
-                Intent myIntent = new Intent(TimelineActivity.this, LoggingActivity.class);
-                myIntent.putExtra("dbID", row.getId());
-                startActivityForResult(myIntent, 2);
-
-            }
-        };
-        myListView.setOnItemClickListener(adapterListener);
-
-
-
-
-
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setVisibility(View.GONE);
-       // final MLogAdapter adapter = new MLogAdapter(this);
-       // recyclerView.setAdapter(adapter);
-      //  recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //Set configurations
+        mFragment.addOnClickListener(this);
+        mFragment.setImageLoadEngine(new ImageLoad(getApplicationContext()));
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, mFragment);
+        transaction.commit();
 
 
 
@@ -132,15 +88,12 @@ public class TimelineActivity extends AppCompatActivity {
         mLogViewModel.getrmAllLogs().observe(this, new Observer<List<MLog>>() {
             @Override
             public void onChanged(@Nullable final List<MLog> mLogs) {
-                // Update the cached copy of the words in the adapter.
-               // adapter.setMlogs(mLogs);
-               // timelineRowsList.add(mLogs);
-                timelineRowsList.clear();
                 Toast.makeText(TimelineActivity.this, "changed", Toast.LENGTH_SHORT).show();
-                for (MLog l : mLogs) {
-                    timelineRowsList.add(new TimelineRow(l.getId(), (new Date(l.getDate())), l.getNote(), l.getFirstName()));
-                }
-                myAdapter.notifyDataSetChanged();
+                mFragment.setData(makeStuff(mLogs), TimelineGroupType.MONTH);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.detach(mFragment).attach(mFragment);
+                transaction.replace(R.id.container, mFragment);
+                transaction.commit();
             }
         });
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -155,12 +108,11 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                Toast.makeText(TimelineActivity.this, "testButt", Toast.LENGTH_SHORT).show();
-                timelineRowsList.clear();
-                myAdapter.notifyDataSetChanged();
+                Intent myIntent = new Intent(TimelineActivity.this, LoggingActivity.class);
+                startActivityForResult(myIntent, 1);
 
             }
         });
-
 
 
         //nav drawer stuff
@@ -187,8 +139,8 @@ public class TimelineActivity extends AppCompatActivity {
                 if (id == R.id.nav_first_fragment) {
                     // Handle the camera action
                 } else if (id == R.id.nav_second_fragment) {
-                    Intent myIntent = new Intent(TimelineActivity.this, LoggingActivity.class);
-                    startActivityForResult(myIntent, 1);
+                    Intent myIntent = new Intent(TimelineActivity.this, StatisticsActivity.class);
+                    startActivity(myIntent);
                 } else if (id == R.id.nav_third_fragment) {
                     Intent myIntent = new Intent(TimelineActivity.this, SettingsActivity.class);
                     startActivity(myIntent);
@@ -205,6 +157,56 @@ public class TimelineActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    public ArrayList<TimelineObject> makeStuff(List<MLog> mLogs){
+        ArrayList<TimelineObject> objs = new ArrayList<>();
+        for (MLog l : mLogs) {
+            int happiness = Character.getNumericValue(l.getSlider().charAt(0));
+            String url = "https://icons8.com/icon/set/smiley-face/ios";
+            if (happiness < 3) {
+                url = "http://png.icons8.com/color/96/000000/sad.png";
+            }
+            else if (happiness < 7) {
+                url = "http://png.icons8.com/color/96/000000/neutral-emoticon.png";
+            }
+            else {
+                url = "http://png.icons8.com/color/96/000000/lol.png";
+            }
+
+            url += "*" + l.getId();
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd, hh:mm aa");
+            String formattedDate = df.format(l.getDate());
+           // mFragment.addSingleObject(new TestO(l.getDate(), (formattedDate), url), TimelineGroupType.MONTH);
+            objs.add(new TestO(l.getDate(), (formattedDate), url));
+        }
+        //Toast.makeText(getApplicationContext(),"ObjSize: "+objs.size(),Toast.LENGTH_SHORT).show();
+        return objs;
+    }
+
+    @Override
+    public void onTimelineObjectClicked(TimelineObject timelineObject) {
+        Toast.makeText(getApplicationContext(),"Clicked: "+timelineObject.getImageUrl(),Toast.LENGTH_SHORT).show();
+
+       // Toast.makeText(TimelineActivity.this, timelineObject.getTitle(), Toast.LENGTH_SHORT).show();
+        Intent myIntent = new Intent(TimelineActivity.this, LoggingActivity.class);
+        String mUrl = timelineObject.getImageUrl();
+        int mID  = Integer.parseInt(mUrl.substring(mUrl.indexOf("*") + 1));
+        myIntent.putExtra("dbID", mID);
+        startActivityForResult(myIntent, 2);
+    }
+
+    @Override
+    public void onTimelineObjectLongClicked(TimelineObject timelineObject) {
+        Toast.makeText(getApplicationContext(),"LongClicked: "+timelineObject.getTitle(),Toast.LENGTH_LONG).show();
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -235,6 +237,7 @@ public class TimelineActivity extends AppCompatActivity {
             mLogViewModel.insert(mlog);
         }
         else if (requestCode == 2 && resultCode == RESULT_OK) {
+            Toast.makeText(getApplicationContext(),"UPDATED",Toast.LENGTH_SHORT).show();
             String fName = data.getStringExtra("fName");
             String lName = data.getStringExtra("lName");
             String mnote = data.getStringExtra("mnote");

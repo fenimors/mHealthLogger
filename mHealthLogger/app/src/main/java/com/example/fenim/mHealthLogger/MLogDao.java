@@ -10,14 +10,17 @@ import java.util.List;
 
 @Dao
 public interface MLogDao {
-    @Query("SELECT * FROM MLog")
+    @Query("SELECT * FROM MLog ORDER BY MLog.date")
     LiveData<List<MLog>> getAllLogs();
 
-    @Query("SELECT * FROM MLog WHERE strftime('%Y', date) = :year")
-    List<MLog> getFromTable(String year);
+    @Query("SELECT * FROM MLog WHERE date BETWEEN :i AND :j")
+    List<MLog> getFromTable(Long i, Long j);
 
     @Query("SELECT * FROM MLog WHERE MLog.id = :id")
     MLog getMlogByID(int id);
+
+    @Query("SELECT * FROM MLog ORDER BY MLog.date")
+    List<MLog> getMlogByDate();
 
     @Insert
     void insertAll(MLog... mlogs);
@@ -30,5 +33,8 @@ public interface MLogDao {
 
     @Query("DELETE FROM MLog")
     void deleteAll();
+
+    @Query("DELETE FROM MLog WHERE MLog.id = :id")
+    int deleteMlogByID(int id);
 }
 

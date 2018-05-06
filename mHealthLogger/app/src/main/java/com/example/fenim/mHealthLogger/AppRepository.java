@@ -2,6 +2,7 @@ package com.example.fenim.mHealthLogger;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.os.AsyncTask;
 
 
@@ -11,7 +12,6 @@ import java.util.concurrent.ExecutionException;
 public class AppRepository {
     private MLogDao rmlogdao;
     private LiveData<List<MLog>> rmAllLogs;
-    private LiveData<List<MLog>> rmDateLogs;
 
     AppRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -24,16 +24,46 @@ public class AppRepository {
     }
 
 
-    public List<MLog> getFromTable(String year) {
+    public List<MLog> getrmDateLogs() {
         List<MLog> mlogs = null;
         try {
-            mlogs = new getFromTableAsyncTask(rmlogdao).execute(year).get();
+            mlogs = new getrmDateLogsAsyncTask(rmlogdao).execute().get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return mlogs;
     }
-    private static class getFromTableAsyncTask extends AsyncTask<String, Void, List<MLog>> {
+    private static class getrmDateLogsAsyncTask extends AsyncTask<Void, Void, List<MLog>> {
+
+        private MLogDao mAsyncTaskDao;
+
+        public getrmDateLogsAsyncTask(MLogDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected List<MLog> doInBackground(Void... Void) {
+            return mAsyncTaskDao.getMlogByDate();
+        }
+
+        @Override
+        protected void onPostExecute(List<MLog> mlog) {
+            super.onPostExecute(mlog);
+        }
+    }
+
+
+
+    public List<MLog> getFromTable(Long i, Long j) {
+        List<MLog> mlogs = null;
+        try {
+            mlogs = new getFromTableAsyncTask(rmlogdao).execute(i, j).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return mlogs;
+    }
+    private static class getFromTableAsyncTask extends AsyncTask<Long, Void, List<MLog>> {
 
         private MLogDao mAsyncTaskDao;
 
@@ -42,8 +72,8 @@ public class AppRepository {
         }
 
         @Override
-        protected List<MLog> doInBackground(String... year) {
-            return mAsyncTaskDao.getFromTable(year[0]);
+        protected List<MLog> doInBackground(Long... params) {
+            return mAsyncTaskDao.getFromTable(params[0], params[1]);
         }
 
         @Override
@@ -99,6 +129,30 @@ public class AppRepository {
         @Override
         protected void onPostExecute(MLog mlog) {
             super.onPostExecute(mlog);
+        }
+    }
+
+    public Integer deleteMlogByID(int uID) {
+        int mlog = 0;
+        try {
+            mlog = new deleteMlogByIDAsyncTask(rmlogdao).execute(uID).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return mlog;
+    }
+    private static class deleteMlogByIDAsyncTask extends AsyncTask<Integer, Void, Integer> {
+
+        private MLogDao mAsyncTaskDao;
+
+        public deleteMlogByIDAsyncTask(MLogDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... uID) {
+            int mlog = mAsyncTaskDao.deleteMlogByID(uID[0]);
+            return mlog;
         }
     }
 }
