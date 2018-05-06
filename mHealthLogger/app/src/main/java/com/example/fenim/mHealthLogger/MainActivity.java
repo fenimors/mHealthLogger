@@ -21,6 +21,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
+
+
+
+
+
         //nav drawer stuff
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Landing");

@@ -9,9 +9,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import java.util.Date;
 
-@Database(entities = {MLog.class}, version = 7)
-@TypeConverters({Converters.class})
+
+@Database(entities = {MLog.class}, version = 8)
+@TypeConverters({TimestampConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract MLogDao mlogDao();
@@ -49,9 +51,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            mDao.deleteAll();
-            MLog mlog = new MLog("Hello", "World", "Cool note bro", 99999999, "123456");
-            mDao.insert(mlog);
+          //  mDao.deleteAll();
+           // MLog mlog = new MLog("Hello", "World", "Cool note bro", (long)100000, "123456");
+           // mDao.insert(mlog);
            // mlog = new MLog("Hello2", "World2", "Cool note bro2", 999999992);
            // mDao.insert(mlog);
             return null;

@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-public class MLogViewHolder extends RecyclerView.ViewHolder{
+public class MLogViewHolder extends com.xwray.groupie.ViewHolder{
 
     public TextView firstName;
     public TextView lastName;

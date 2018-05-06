@@ -42,7 +42,9 @@ public class MLogAdapter extends RecyclerView.Adapter<MLogViewHolder> {
             holder.note.setText(current.getNote());
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String formattedDate = df.format(current.getDate());
+
             holder.date.setText(formattedDate);
+
 
             for (int i = 0; i < Constant.SLIDER_COUNT; i++)
             {

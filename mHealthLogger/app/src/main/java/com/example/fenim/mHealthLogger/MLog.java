@@ -3,9 +3,11 @@ package com.example.fenim.mHealthLogger;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -16,7 +18,7 @@ public class MLog {
     @NonNull
     private int id;
 
-    public MLog(String firstName, String lastName, String note, long date, String slider) {
+    public MLog(String firstName, String lastName, String note, Long date, String slider) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.note = note;
@@ -45,13 +47,14 @@ public class MLog {
     private String note;
 
     @ColumnInfo(name = "date")
-    private long date;
+    @TypeConverters({DateTypeConverter.class})
+    public Long date;
 
-    public long getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

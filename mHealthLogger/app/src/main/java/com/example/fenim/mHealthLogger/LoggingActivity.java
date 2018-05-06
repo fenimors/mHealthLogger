@@ -1,5 +1,7 @@
 package com.example.fenim.mHealthLogger;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -22,6 +24,9 @@ import com.warkiz.widget.IndicatorSeekBar;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import static com.example.fenim.mHealthLogger.Constant.SLIDER_NAMES;
 
 public class LoggingActivity extends AppCompatActivity {
 
@@ -37,47 +42,85 @@ public class LoggingActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
+    private MLogViewModel mLogViewModel;
 
+    Intent replyIntent;
+    Long time_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
+        //nav drawer
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(1).setChecked(true);
+
+        replyIntent = new Intent();
 
         for (int i = 0; i < Constant.SLIDER_COUNT; i++)
         {
-            if( !sharedPref.getBoolean("key_slider" + (i+1), true))
+            if( !sharedPref.getBoolean("key_slider" + (i+1), true)) {
                 findViewById(getResources().getIdentifier(
-                        "seekBar"+(i+1), "id", getPackageName())).setVisibility(View.GONE);
+                        "seekBar" + (i + 1), "id", getPackageName())).setVisibility(View.GONE);
+                findViewById(getResources().getIdentifier(
+                        "seekBar" + (i + 1) + "Tit", "id", getPackageName())).setVisibility(View.GONE);
+            }
+            ((TextView) findViewById(getResources().getIdentifier(
+                    "seekBar" + (i + 1) + "Tit", "id", getPackageName()))).setText(SLIDER_NAMES[i]);
         }
 
         //Getting the timestamp
         final Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c.getTime());
 
 
 
 
-        // formattedDate have current date/time SHOWN
-        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
-        TextView txtView = (TextView) findViewById(R.id.textView2);
-        txtView.setText("Current Date and Time : " + formattedDate);
-        txtView.setTextSize(20);
 
         //Handles sliders puts it into a string file to be passed back to the viewer
         //if( findViewById(R.id.seekBar1).getVisibility() != View.GONE)
 
 
         //database stuff
-
         firstname = findViewById(R.id.first_name);
         lastname = findViewById(R.id.last_name);
         note = findViewById(R.id.note);
+
+        int dbID = getIntent().getIntExtra("dbID", -1);
+        mLogViewModel = ViewModelProviders.of(this).get(MLogViewModel.class);
+
+        if(dbID != -1)
+        {
+            MLog mmLog = mLogViewModel.getMlogByID(dbID);
+            firstname.setText("lol");
+            firstname.setText(mmLog.getFirstName());
+            lastname.setText(mmLog.getLastName());
+            note.setText(mmLog.getNote());
+            replyIntent.putExtra("mID", mmLog.getId());
+            time_data = mmLog.getDate();
+            String slider = mmLog.getSlider();
+            for (int i = 0; i < Constant.SLIDER_COUNT; i++)
+            {
+                if (slider.charAt(i) != 'E') {
+                    float t =  Character.getNumericValue(slider.charAt(i));
+                    ((IndicatorSeekBar) findViewById(getResources().getIdentifier("seekBar" +(i+1), "id", getPackageName()))).setProgress(t);
+                }
+            }
+        }
+        else {
+            time_data = c.getTimeInMillis();
+        }
+
+
+        // formattedDate have current date/time SHOWN
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(time_data);
+        TextView txtView = (TextView) findViewById(R.id.textView2);
+        txtView.setText("Date and Time : " + formattedDate);
+        txtView.setTextSize(20);
+        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
+
 
 
         //Add the button
@@ -87,7 +130,7 @@ public class LoggingActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             //@Override
             public void onClick(View v) {
-                Intent replyIntent = new Intent();
+
                 if (TextUtils.isEmpty(firstname.getText())) {
                     setResult(RESULT_CANCELED, replyIntent);
                 }
@@ -108,7 +151,7 @@ public class LoggingActivity extends AppCompatActivity {
                     String fName = firstname.getText().toString();
                     String lName = lastname.getText().toString();
                     String mnote = note.getText().toString();
-                    Long time_data = c.getTimeInMillis();
+
 
                     replyIntent.putExtra("fName", fName);
                     replyIntent.putExtra("lName", lName);
@@ -132,7 +175,7 @@ public class LoggingActivity extends AppCompatActivity {
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -141,11 +184,22 @@ public class LoggingActivity extends AppCompatActivity {
                         menuItem.setChecked(true);
                         // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
+                        int id = menuItem.getItemId();
+
+                        if (id == R.id.nav_first_fragment) {
+                            Intent myIntent = new Intent(LoggingActivity.this, TimelineActivity.class);
+                            startActivity(myIntent);
+                        } else if (id == R.id.nav_second_fragment) {
+                           // Intent myIntent = new Intent(TimelineActivity.this, LoggingActivity.class);
+
+                        } else if (id == R.id.nav_third_fragment) {
+                            Intent myIntent = new Intent(LoggingActivity.this, SettingsActivity.class);
+                            startActivity(myIntent);
+                        }
 
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
-                        Intent myIntent = new Intent(LoggingActivity.this, TimelineActivity.class);
-                        startActivity(myIntent);
+
                         return true;
                     }
                 });
